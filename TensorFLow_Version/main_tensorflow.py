@@ -77,7 +77,7 @@ if __name__ == '__main__':
 	
     # Create and compile the model
     model = TransLOB(window_size,n_dim)
-`
+	
     model.compile(
         tf.keras.optimizers.Adam(
             learning_rate=lr,
