@@ -100,9 +100,9 @@ def train_data_pipe(tf_dataset, window_size, batch_size, k, length):
 
     ds = ds.batch(batch_size=batch_size)
     
-    ds = ds.cache()
+    #ds = ds.cache()
     
-    ds = ds.prefetch(tf.data.AUTOTUNE)
+    #ds = ds.prefetch(tf.data.AUTOTUNE)
 
     return ds
 
