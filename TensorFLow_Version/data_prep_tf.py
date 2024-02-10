@@ -75,9 +75,7 @@ def train_data_pipe(tf_dataset, window_size, batch_size, k):
         lambda current, future: (generate_labels(current, future)), num_parallel_calls=tf.data.AUTOTUNE)
 
     ds = make_window_dataset(tf_dataset, tf_labels, window_size=window_size, shift=1, horizon=k)
-
    
-
     neutral = 0
     up = 0
     down = 0
@@ -96,6 +94,8 @@ def train_data_pipe(tf_dataset, window_size, batch_size, k):
     print(f'Price went down {(down/(up+down+neutral))*100} %')
     print(f'Price stayed neutral {(neutral/(up+down+neutral))*100} %')
    
+    proportions = [(down/(up+down+neutral)),(neutral/(up+down+neutral)),(up/(up+down+neutral))]
+   
     ds = ds.cache()
     ds = ds.shuffle(up+down+neutral)
 
@@ -103,7 +103,7 @@ def train_data_pipe(tf_dataset, window_size, batch_size, k):
 
     ds = ds.prefetch(tf.data.AUTOTUNE)
 
-    return ds
+    return ds, proportions
 
 
 def test_data_pipe(tf_dataset, window_size, batch_size, k):
