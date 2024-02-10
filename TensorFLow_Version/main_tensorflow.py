@@ -71,7 +71,7 @@ if __name__ == '__main__':
     lr = 0.0001
 
     # Set the data pipeline for preprocessing before training
-    ds_train, proportions = train_data_pipe(tf_dataset_train, window_size, batch_size, k)
+    ds_train, proportions = train_data_pipe(tf_dataset_train, window_size, batch_size, k, val_point)
     ds_val = test_data_pipe(tf_dataset_val, window_size, batch_size, k)
     ds_test = test_data_pipe(tf_dataset_test, window_size, batch_size, k)
 	
