@@ -62,7 +62,7 @@ def make_window_dataset(ds, labels, window_size=100, shift=1, horizon=600):
     return combined_dataset
 
 
-def train_data_pipe(tf_dataset, window_size, batch_size, k):
+def train_data_pipe(tf_dataset, window_size, batch_size, k, length):
     mid_prices = tf_dataset.map(get_mid_price, num_parallel_calls=tf.data.AUTOTUNE)
     # Create future windows with size the wanted predicted horizon k
     future_mid_prices = mid_prices.window(size=k, shift=1, drop_remainder=True)
@@ -98,7 +98,7 @@ def train_data_pipe(tf_dataset, window_size, batch_size, k):
     proportions = [(down/(up+down+neutral)),(neutral/(up+down+neutral)),(up/(up+down+neutral))]'''
     proportions = [0.20901199822930707,0.59070512838963076, 0.2002828733810622]
    
-    ds = ds.shuffle(up+down+neutral)
+    ds = ds.shuffle(length)
 
     ds = ds.batch(batch_size=batch_size)
 
