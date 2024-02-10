@@ -1,13 +1,14 @@
 import os
+
 os.environ['TF_CPP_MIN_LOG_LEVEL'] = '3'
 import matplotlib.pyplot as plt
 import seaborn as sn
 from sklearn.metrics import confusion_matrix
-from data_prep_tf import train_data_pipe,test_data_pipe
+from data_prep_tf import train_data_pipe, test_data_pipe
 from model_builider_tf import TransLOB
 import pandas as pd
 import tensorflow as tf
-from sklearn.preprocessing import StandardScaler,MinMaxScaler
+from sklearn.preprocessing import StandardScaler, MinMaxScaler
 import numpy as np
 
 if __name__ == '__main__':
@@ -27,7 +28,6 @@ if __name__ == '__main__':
     else:
         print("No GPU found")
 
-    
     # Set params
     n_dim = 40
     # first_train = 1495000
@@ -74,25 +74,22 @@ if __name__ == '__main__':
     ds_train, proportions = train_data_pipe(tf_dataset_train, window_size, batch_size, k, val_point)
     ds_val = test_data_pipe(tf_dataset_val, window_size, batch_size, k)
     ds_test = test_data_pipe(tf_dataset_test, window_size, batch_size, k)
-	
-    # Create and compile the model
-    model = TransLOB(window_size,n_dim)
-	
-    train_class_weights = {
-	    0: 1 / proportions[0],
-	    1: 1 / proportions[1],
-	    2: 1 / proportions[2]
-    }
-	
-    def custom_sparse_crossentropy_loss(y_true, y_pred):
-    	  # Convert class weights to tensor
-    	  weights = tf.constant(train_class_weights)
 
-	  # Compute cross-entropy loss with class weights
-   	  loss = tf.nn.sparse_softmax_cross_entropy_with_logits(labels=y_true, logits=y_pred)
-   	  weighted_loss = tf.multiply(loss, weights)
-  	  return tf.reduce_mean(weighted_loss)
-	    
+    # Create and compile the model
+    model = TransLOB(window_size, n_dim)
+
+    train_class_weights = [(1 / proportions[0]), (1 / proportions[1]),(1 / proportions[2])]
+
+    def custom_sparse_crossentropy_loss(y_true, y_pred):
+        # Convert class weights to tensor
+        weights = tf.constant(train_class_weights)
+
+        # Compute cross-entropy loss with class weights
+        loss = tf.nn.sparse_softmax_cross_entropy_with_logits(labels=y_true, logits=y_pred)
+        weighted_loss = tf.multiply(loss, weights)
+        return tf.reduce_mean(weighted_loss)
+
+
     model.compile(
         tf.keras.optimizers.Adam(
             learning_rate=lr,
@@ -104,11 +101,8 @@ if __name__ == '__main__':
         metrics=[tf.keras.metrics.SparseCategoricalAccuracy()],
     )
 
-
-	    
     # Fit the model
     r = model.fit(ds_train, epochs=epochs, batch_size=batch_size, validation_data=ds_val)
-
 
     # Finally test the model on test data
     predictions = model.predict(ds_test)
@@ -121,9 +115,8 @@ if __name__ == '__main__':
     true_classes = np.array(true_classes)
     accuracy = np.mean(predicted_classes == true_classes)
     print(f'Test Accuracy: {accuracy * 100:.2f}%')
-    
+
     cm = confusion_matrix(true_classes, predicted_classes)
     print(cm)
 
     model.save('/content/drive/My Drive/my_model.h5')
-    
