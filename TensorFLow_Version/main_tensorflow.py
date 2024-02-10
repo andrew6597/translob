@@ -78,6 +78,21 @@ if __name__ == '__main__':
     # Create and compile the model
     model = TransLOB(window_size,n_dim)
 	
+    train_class_weights = {
+	    0: 1 / proportions[0],
+	    1: 1 / proportions[1],
+	    2: 1 / proportions[2]
+    }
+	
+    def custom_sparse_crossentropy_loss(y_true, y_pred):
+    	  # Convert class weights to tensor
+    	  weights = tf.constant(train_class_weights)
+
+	  # Compute cross-entropy loss with class weights
+   	  loss = tf.nn.sparse_softmax_cross_entropy_with_logits(labels=y_true, logits=y_pred)
+   	  weighted_loss = tf.multiply(loss, weights)
+  	  return tf.reduce_mean(weighted_loss)
+	    
     model.compile(
         tf.keras.optimizers.Adam(
             learning_rate=lr,
@@ -85,16 +100,12 @@ if __name__ == '__main__':
             beta_2=0.999,
             name="Adam",
         ),
-        loss=tf.keras.losses.SparseCategoricalCrossentropy(),
+        loss=custom_sparse_crossentropy_loss,
         metrics=[tf.keras.metrics.SparseCategoricalAccuracy()],
     )
 
-    train_class_weights = {
-	    0: 1 / proportions[0],
-	    1: 1 / proportions[1],
-	    2: 1 / proportions[2]
-    }
 
+	    
     # Fit the model
     r = model.fit(ds_train, epochs=epochs, batch_size=batch_size, validation_data=ds_val, class_weight= train_class_weights)
 
