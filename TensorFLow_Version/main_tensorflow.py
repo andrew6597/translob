@@ -113,4 +113,6 @@ if __name__ == '__main__':
     
     cm = confusion_matrix(true_classes, predicted_classes)
     print(cm)
+
+    model.save('/content/drive/My Drive/my_model.h5')
     
