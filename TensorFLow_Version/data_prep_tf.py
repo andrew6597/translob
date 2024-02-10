@@ -98,7 +98,7 @@ def train_data_pipe(tf_dataset, window_size, batch_size, k, length):
     proportions = [(down/(up+down+neutral)),(neutral/(up+down+neutral)),(up/(up+down+neutral))]'''
     proportions = [0.20901199822930707,0.59070512838963076, 0.2002828733810622]
    
-    ds = ds.shuffle(length)
+    ds = ds.shuffle(length-window_size-k-2)
 
     ds = ds.batch(batch_size=batch_size)
 
