@@ -71,13 +71,13 @@ if __name__ == '__main__':
     lr = 0.0001
 
     # Set the data pipeline for preprocessing before training
-    ds_train = train_data_pipe(tf_dataset_train, window_size, batch_size, k)
+    ds_train, proportions = train_data_pipe(tf_dataset_train, window_size, batch_size, k)
     ds_val = test_data_pipe(tf_dataset_val, window_size, batch_size, k)
     ds_test = test_data_pipe(tf_dataset_test, window_size, batch_size, k)
 	
     # Create and compile the model
     model = TransLOB(window_size,n_dim)
-
+`
     model.compile(
         tf.keras.optimizers.Adam(
             learning_rate=lr,
@@ -89,13 +89,15 @@ if __name__ == '__main__':
         metrics=[tf.keras.metrics.SparseCategoricalAccuracy()],
     )
 
-    # Fit the model
-    r = model.fit(ds_train, epochs=epochs, batch_size=batch_size, validation_data=ds_val)
+    train_class_weights = {
+	    0: 1 / proportions[0],
+	    1: 1 / proportions[1],
+	    2: 1 / proportions[2]
+    }
 
-    plt.plot(r.history['loss'], label ='loss')
-    plt.plot(r.history['val_loss'], label = 'val_loss')
-    plt.legend()
-    plt.show()
+    # Fit the model
+    r = model.fit(ds_train, epochs=epochs, batch_size=batch_size, validation_data=ds_val, class_weights= train_class_weights)
+
 
     # Finally test the model on test data
     predictions = model.predict(ds_test)
@@ -110,10 +112,5 @@ if __name__ == '__main__':
     print(f'Test Accuracy: {accuracy * 100:.2f}%')
     
     cm = confusion_matrix(true_classes, predicted_classes)
-    plt.figure(figsize=(10, 8))
-    sn.heatmap(cm, annot=True, fmt='d', cmap='Blues', xticklabels=['Down','Neutral','Up'], yticklabels=['Down','Neutral','Up'])
-    plt.xlabel('Predicted')
-    plt.ylabel('True')
-    plt.title('Confusion Matrix')
-    plt.show()
+    print(cm)
     
