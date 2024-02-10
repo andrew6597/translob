@@ -96,7 +96,7 @@ if __name__ == '__main__':
     }
 
     # Fit the model
-    r = model.fit(ds_train, epochs=epochs, batch_size=batch_size, validation_data=ds_val, class_weights= train_class_weights)
+    r = model.fit(ds_train, epochs=epochs, batch_size=batch_size, validation_data=ds_val, class_weight= train_class_weights)
 
 
     # Finally test the model on test data
