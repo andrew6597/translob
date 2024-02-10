@@ -62,7 +62,7 @@ def make_window_dataset(ds, labels, window_size=100, shift=1, horizon=600):
     return combined_dataset
 
 
-def train_data_pipe(tf_dataset, window_size, batch_size, k, length):
+def train_data_pipe(tf_dataset, window_size, batch_size, k):
     mid_prices = tf_dataset.map(get_mid_price, num_parallel_calls=tf.data.AUTOTUNE)
     # Create future windows with size the wanted predicted horizon k
     future_mid_prices = mid_prices.window(size=k, shift=1, drop_remainder=True)
@@ -76,8 +76,8 @@ def train_data_pipe(tf_dataset, window_size, batch_size, k, length):
 
     ds = make_window_dataset(tf_dataset, tf_labels, window_size=window_size, shift=1, horizon=k)
 
-    ds = ds.cache()
-    '''
+   
+
     neutral = 0
     up = 0
     down = 0
@@ -94,9 +94,10 @@ def train_data_pipe(tf_dataset, window_size, batch_size, k, length):
     print('-------------------')
     print(f'Price went up {(up/(up+down+neutral))*100} %')
     print(f'Price went down {(down/(up+down+neutral))*100} %')
-    print(f'Price stayed neutral {(neutral/(up+down+neutral))*100} %')'''
-
-    ds = ds.shuffle(length)
+    print(f'Price stayed neutral {(neutral/(up+down+neutral))*100} %')
+   
+    ds = ds.cache()
+    ds = ds.shuffle(up+down+neutral)
 
     ds = ds.batch(batch_size=batch_size)
 
