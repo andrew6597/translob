@@ -79,14 +79,7 @@ if __name__ == '__main__':
     model = TransLOB(window_size, n_dim)
 
     train_class_weights = [(1 / proportions[0]), (1 / proportions[1]),(1 / proportions[2])]
-
-    def custom_sparse_crossentropy_loss(y_true, y_pred):
-        # Convert class weights to tensor
-        weights = tf.constant(train_class_weights)
-
-        loss_fn = tf.keras.losses.SparseCategoricalCrossentropy(from_logits=True)
-        loss = loss_fn(y_true, y_pred, sample_weight=weights)
-        return loss
+    
 
 
     model.compile(
@@ -95,13 +88,14 @@ if __name__ == '__main__':
             beta_1=0.9,
             beta_2=0.999,
             name="Adam",
+            
         ),
-        loss=custom_sparse_crossentropy_loss,
+        loss=tf.keras.losses.SparseCategoricalCrossentropy(),
         metrics=[tf.keras.metrics.SparseCategoricalAccuracy()],
     )
 
     # Fit the model
-    r = model.fit(ds_train, epochs=epochs, batch_size=batch_size, validation_data=ds_val)
+    r = model.fit(ds_train, epochs=epochs, batch_size=batch_size, validation_data=ds_val, class_weight = train_class_weights)
 
     # Finally test the model on test data
     predictions = model.predict(ds_test)
