@@ -96,7 +96,7 @@ def train_data_pipe(tf_dataset, window_size, batch_size, k, length):
     print(f'Price went down {(down/(up+down+neutral))*100} %')
     print(f'Price stayed neutral {(neutral/(up+down+neutral))*100} %')'''
 
-    ds = ds.shuffle(length)
+    ds = ds.shuffle(100000)
 
     ds = ds.batch(batch_size=batch_size)
     
