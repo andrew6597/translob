@@ -84,10 +84,9 @@ if __name__ == '__main__':
         # Convert class weights to tensor
         weights = tf.constant(train_class_weights)
 
-        # Compute cross-entropy loss with class weights
-        loss = tf.nn.sparse_softmax_cross_entropy_with_logits(labels=tf.squeeze(y_true), logits=y_pred)
-        weighted_loss = tf.multiply(loss, weights)
-        return tf.reduce_mean(weighted_loss)
+        loss_fn = tf.keras.losses.SparseCategoricalCrossentropy(from_logits=True)
+        loss = loss_fn(y_true, y_pred, sample_weight=weights)
+        return loss
 
 
     model.compile(
