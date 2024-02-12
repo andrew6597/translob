@@ -45,7 +45,7 @@ def TransLOB(window_size,n_dim):
     tb2 = TransformerBlock('Block2', 3, True)
 
     x = tb1(x)
-    # x= tb2(x)
+    x= tb2(x)
 
     # MLP
     x = tf.keras.layers.Flatten()(x)
