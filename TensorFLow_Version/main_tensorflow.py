@@ -42,6 +42,7 @@ if __name__ == '__main__':
     print('Loaded df', df.shape)
     
     df_scaled = z_score(df)
+    print(df_scaled)
     print('Done Scaling')
     # df_train = df.iloc[first_train:last_train, :n_dim]
     # df_val = df.iloc[last_train:first_test, :n_dim]
