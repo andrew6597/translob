@@ -99,7 +99,7 @@ def train_data_pipe(tf_dataset, window_size, batch_size, k, length):
     print(f'Price stayed neutral {neutral_per*100} %')
     proportions = [down_per, neutral_per,up_per]
 
-    ds = ds.shuffle(int((length - window_size - k - 2)/10))
+    ds = ds.shuffle(int((length - window_size - k - 2)/7))
 
     ds = ds.batch(batch_size=batch_size)
 
