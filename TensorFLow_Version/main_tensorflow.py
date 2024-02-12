@@ -41,7 +41,7 @@ if __name__ == '__main__':
     df = pd.read_csv('/content/drive/My Drive/LOBseries_100ms.csv').drop(columns=['Unnamed: 0'])
     print('Loaded df', df.shape)
     
-    df_scaled = z_score(df)
+    df_scaled = z_score(df.iloc[:, :n_dim])
     print(df_scaled)
     print('Done Scaling')
     # df_train = df.iloc[first_train:last_train, :n_dim]
