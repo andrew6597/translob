@@ -4,7 +4,7 @@ import tensorflow as tf
 def get_mid_price(x):
    return (x[0] + x[2])/ 2.0
 
-def generate_labels(current_mid_price, future_mid_prices, alpha = 0.0002):
+def generate_labels(current_mid_price, future_mid_prices, alpha = 0.0001):
 
     mean_future_mid_prices = tf.reduce_mean(future_mid_prices)
 
