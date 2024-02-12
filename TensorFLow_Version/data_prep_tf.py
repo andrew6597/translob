@@ -77,7 +77,7 @@ def train_data_pipe(tf_dataset, window_size, batch_size, k, length):
     ds = make_window_dataset(tf_dataset, tf_labels, window_size=window_size, shift=1, horizon=k)
 
     
-    '''
+    
     neutral = 0
     up = 0
     down = 0
@@ -88,23 +88,27 @@ def train_data_pipe(tf_dataset, window_size, batch_size, k, length):
             up += 1
         else:
             down += 1
-
+    up_per = up/(up+down+neutral)
+    down_per = down/(up+down+neutral)
+    neutral_per = neutral/(up+down+neutral)
     print('Stats of Training Dataset:')
     print(f'{k/10} seconds horizon:')
     print('-------------------')
-    print(f'Price went up {(up/(up+down+neutral))*100} %')
-    print(f'Price went down {(down/(up+down+neutral))*100} %')
-    print(f'Price stayed neutral {(neutral/(up+down+neutral))*100} %')'''
+    print(f'Price went up {up_per*100} %')
+    print(f'Price went down {down_per*100} %')
+    print(f'Price stayed neutral {neutral_per*100} %')
+    proportions = [down_per, neutral_per,up_per]
 
     ds = ds.shuffle(int((length - window_size - k - 2)/10))
 
     ds = ds.batch(batch_size=batch_size)
+
     
     #ds = ds.cache()
     
     #ds = ds.prefetch(tf.data.AUTOTUNE)
 
-    return ds, [0.20901199822930707, 0.59070512838963076, 0.2002828733810622]
+    return ds,proportions  #[0.20901199822930707, 0.59070512838963076, 0.2002828733810622]
 
 
 def test_data_pipe(tf_dataset, window_size, batch_size, k):
