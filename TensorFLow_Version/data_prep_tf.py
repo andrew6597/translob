@@ -7,9 +7,9 @@ def z_score(df):
     sums = df.expanding().sum().shift()
     print('sums:', sums)
     stds = (sums - means)/np.array([df.index.values] * 40).T
-    print(stds)
+    print('stds:', stds)
     normalized_df = (df.iloc[1:,:] - means.iloc[1:,:]) / stds.iloc[1:,:]
-    return normalized_df.reset_index(drop = True, inplace = True)
+    return normalized_df.iloc[1:].reset_index(drop = True)
 
 def get_mid_price(x):
    return (x[0] + x[2])/ 2.0
