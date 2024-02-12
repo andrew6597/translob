@@ -66,8 +66,8 @@ if __name__ == '__main__':
     # Set params
     window_size = 100
     batch_size = 16
-    k = 50
-    epochs = 1
+    k = 100
+    epochs = 3
     lr = 0.0001
 
     # Set the data pipeline for preprocessing before training
