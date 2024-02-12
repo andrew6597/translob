@@ -4,7 +4,7 @@ import tensorflow as tf
 def z_score(df):
         means = df.expanding().mean().shift()  # Calculate expanding mean and shift by one
         stds = df.expanding().std().shift()    # Calculate expanding standard deviation and shift by one
-        normalized_df = (df.iloc[1:,:] - means.iloc[1:,:]) / (stds.iloc[1:,:] +1e-9)
+        normalized_df = (df - means) / (stds +1e-9)
         return normalized_df.reset_index(drop = True)
 
 def get_mid_price(x):
