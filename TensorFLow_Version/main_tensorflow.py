@@ -4,7 +4,7 @@ os.environ['TF_CPP_MIN_LOG_LEVEL'] = '3'
 import matplotlib.pyplot as plt
 import seaborn as sn
 from sklearn.metrics import confusion_matrix
-from data_prep_tf import train_data_pipe, test_data_pipe
+from data_prep_tf import train_data_pipe, test_data_pipe, z_score
 from model_builider_tf import TransLOB
 import pandas as pd
 import tensorflow as tf
@@ -40,23 +40,25 @@ if __name__ == '__main__':
     # Load and split df
     df = pd.read_csv('/content/drive/My Drive/LOBseries_100ms.csv').drop(columns=['Unnamed: 0'])
     print('Loaded df', df.shape)
-
+    
+    df_scaled = z_score(df)
+    print('Done Scaling')
     # df_train = df.iloc[first_train:last_train, :n_dim]
     # df_val = df.iloc[last_train:first_test, :n_dim]
     # df_test = df.iloc[first_test: last_test, :n_dim]
-    val_point = int(len(df) * 2 / 3)
+    val_point = int(len(df_scaled) * 2 / 3)
     test_point = val_point + 150000
 
-    df_train = df.iloc[:val_point, :n_dim]
-    df_val = df.iloc[val_point:test_point, :n_dim]
-    df_test = df.iloc[test_point:, :n_dim]
+    df_train_scaled = df_scaled.iloc[:val_point, :n_dim]
+    df_val_scaled = df_scaled.iloc[val_point:test_point, :n_dim]
+    df_test_scaled = df_scaled.iloc[test_point:, :n_dim]
 
     # Scale the data
-    scaler = StandardScaler()
-    scaler.fit(df_train)
-    df_train_scaled = pd.DataFrame(scaler.transform(df_train))
-    df_val_scaled = pd.DataFrame(scaler.transform(df_val))
-    df_test_scaled = pd.DataFrame(scaler.transform(df_test))
+    #scaler = StandardScaler()
+    #scaler.fit(df_train)
+    #df_train_scaled = pd.DataFrame(scaler.transform(df_train))
+    #df_val_scaled = pd.DataFrame(scaler.transform(df_val))
+    #df_test_scaled = pd.DataFrame(scaler.transform(df_test))
 
     # Load the data as tensorflow datasets for efficiency
     tf_dataset_train = tf.data.Dataset.from_tensor_slices(df_train_scaled)
