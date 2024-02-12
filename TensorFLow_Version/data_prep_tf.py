@@ -5,7 +5,7 @@ def z_score(df):
     means = df.expanding().mean().shift()  # Calculate expanding mean and shift by one
     print('means:' ,means)
     sums = df.expanding().sum().shift()
-    print('sums':, sums)
+    print('sums:', sums)
     stds = (sums - means)/np.array([df.index.values] * 40).T
     print(stds)
     normalized_df = (df.iloc[1:,:] - means.iloc[1:,:]) / stds.iloc[1:,:]
