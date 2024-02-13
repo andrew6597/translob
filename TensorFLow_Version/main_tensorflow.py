@@ -63,11 +63,11 @@ if __name__ == '__main__':
     tf_dataset_test = tf.data.Dataset.from_tensor_slices(df_test_scaled)
 
     # Set params
-    window_size = 50
+    window_size = 400
     batch_size = 16
-    k = 50
+    k = 100
     epochs = 3
-    lr = 0.0001
+    lr = 0.001
 
     # Set the data pipeline for preprocessing before training
     ds_train, proportions = train_data_pipe(tf_dataset_train, window_size, batch_size, k, val_point)
