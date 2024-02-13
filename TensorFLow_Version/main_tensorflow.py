@@ -63,7 +63,7 @@ if __name__ == '__main__':
     tf_dataset_test = tf.data.Dataset.from_tensor_slices(df_test_scaled)
 
     # Set params
-    window_size = 400
+    window_size = 100
     batch_size = 16
     k = 100
     epochs = 3
