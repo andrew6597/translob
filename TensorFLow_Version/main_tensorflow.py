@@ -40,7 +40,10 @@ if __name__ == '__main__':
     # Load and split df
     df = pd.read_csv('/content/drive/My Drive/LOBseries_100ms.csv').drop(columns=['Unnamed: 0'])
     print('Loaded df', df.shape)
-
+    
+    val_point = int(len(df) * 2 / 3)
+    test_point = val_point + 150000
+    
     df_train = df.iloc[:val_point, :n_dim]
     df_val = df.iloc[val_point:test_point, :n_dim]
     df_test = df.iloc[test_point:, :n_dim]
