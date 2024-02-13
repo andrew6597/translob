@@ -40,26 +40,19 @@ if __name__ == '__main__':
     # Load and split df
     df = pd.read_csv('/content/drive/My Drive/LOBseries_100ms.csv').drop(columns=['Unnamed: 0'])
     print('Loaded df', df.shape)
+
+    df_train = df.iloc[:val_point, :n_dim]
+    df_val = df.iloc[val_point:test_point, :n_dim]
+    df_test = df.iloc[test_point:, :n_dim]
     
-    df_scaled = z_score(df.iloc[:, :n_dim])
-    print(df_scaled)
-    print('Done Scaling')
-    # df_train = df.iloc[first_train:last_train, :n_dim]
-    # df_val = df.iloc[last_train:first_test, :n_dim]
-    # df_test = df.iloc[first_test: last_test, :n_dim]
-    val_point = int(len(df_scaled) * 2 / 3)
-    test_point = val_point + 150000
-
-    df_train_scaled = df_scaled.iloc[:val_point, :n_dim]
-    df_val_scaled = df_scaled.iloc[val_point:test_point, :n_dim]
-    df_test_scaled = df_scaled.iloc[test_point:, :n_dim]
-
     # Scale the data
-    #scaler = StandardScaler()
-    #scaler.fit(df_train)
-    #df_train_scaled = pd.DataFrame(scaler.transform(df_train))
-    #df_val_scaled = pd.DataFrame(scaler.transform(df_val))
-    #df_test_scaled = pd.DataFrame(scaler.transform(df_test))
+    scaler = StandardScaler()
+    scaler.fit(df_train)
+    df_train_scaled = pd.DataFrame(scaler.transform(df_train))
+    df_val_scaled = pd.DataFrame(scaler.transform(df_val))
+    df_test_scaled = pd.DataFrame(scaler.transform(df_test))
+
+    print('Done Scaling')
 
     # Load the data as tensorflow datasets for efficiency
     tf_dataset_train = tf.data.Dataset.from_tensor_slices(df_train_scaled)
@@ -67,7 +60,7 @@ if __name__ == '__main__':
     tf_dataset_test = tf.data.Dataset.from_tensor_slices(df_test_scaled)
 
     # Set params
-    window_size = 100
+    window_size = 50
     batch_size = 16
     k = 100
     epochs = 3
