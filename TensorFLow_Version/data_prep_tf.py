@@ -26,7 +26,7 @@ def generate_labels(current_mid_price, future_mid_prices, alpha = 0.0001):
 
 
 def generate_stationary_labels(current_mid_price,future_mid_prices, alpha = 0.001):
-    cumprods = tf.cumprod(1 + future_mid_prices)
+    cumprods = tf.math.cumprod(1 + future_mid_prices)
     pct_mean_cumprods = tf.reduce_mean(cumprods)
     condition_up = tf.greater(pct_mean_cumprods,1 + alpha)
     condition_down = tf.less(pct_mean_cumprods, 1 -alpha)
