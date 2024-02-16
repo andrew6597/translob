@@ -30,37 +30,37 @@ if __name__ == '__main__':
 
     # Set params
     n_dim = 40
-    # first_train = 1495000
-    # print(f'Dataset starts at time {first_train}')
-    # last_train = first_train + 150000
-    # We will keep 20,000 rows for validation and the next 20,000 for test
-    # first_test = last_train + 20000
-    # last_test = first_test + 20000
 
     # Load and split df
     df = pd.read_csv('/content/drive/My Drive/LOBseries_100ms.csv').drop(columns=['Unnamed: 0'])
     print('Loaded df', df.shape)
     
-    val_point = int(len(df) * 2 / 3)
+    df_diff = df.pct_change().dropna()
+    df_diff.reset_index(inplace=True, drop=True)
+
+    print('Data made stationary by taking percentage change')
+
+    val_point = int(len(df_diff) * 2 / 3)
     test_point = val_point + 150000
     
-    df_train = df.iloc[:val_point, :n_dim]
-    df_val = df.iloc[val_point:test_point, :n_dim]
-    df_test = df.iloc[test_point:, :n_dim]
+    df_train = df_diff.iloc[:val_point, :n_dim]
+    df_val = df_diff.iloc[val_point:test_point, :n_dim]
+    df_test = df_diff.iloc[test_point:, :n_dim]
     
-    # Scale the data
+    # Scale the data (Unneccessaty if we do it with pct change)
+
+    '''
     scaler = StandardScaler()
     scaler.fit(df_train)
     df_train_scaled = pd.DataFrame(scaler.transform(df_train))
     df_val_scaled = pd.DataFrame(scaler.transform(df_val))
-    df_test_scaled = pd.DataFrame(scaler.transform(df_test))
-
-    print('Done Scaling')
+    df_test_scaled = pd.DataFrame(scaler.transform(df_test)
+    print('Done Scaling')'''
 
     # Load the data as tensorflow datasets for efficiency
-    tf_dataset_train = tf.data.Dataset.from_tensor_slices(df_train_scaled)
-    tf_dataset_val = tf.data.Dataset.from_tensor_slices(df_val_scaled)
-    tf_dataset_test = tf.data.Dataset.from_tensor_slices(df_test_scaled)
+    tf_dataset_train = tf.data.Dataset.from_tensor_slices(df_train)
+    tf_dataset_val = tf.data.Dataset.from_tensor_slices(df_val)
+    tf_dataset_test = tf.data.Dataset.from_tensor_slices(df_test)
 
     # Set params
     window_size = 100
