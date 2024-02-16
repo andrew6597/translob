@@ -11,7 +11,7 @@ def z_score(df):
 def get_mid_price(x):
    return (x[0] + x[2])/ 2.0
 
-def generate_labels(current_mid_price, future_mid_prices, alpha = 0.00001):
+def generate_labels(current_mid_price, future_mid_prices, alpha = 0.000005):
 
     mean_future_mid_prices = tf.reduce_mean(future_mid_prices)
 
@@ -25,7 +25,7 @@ def generate_labels(current_mid_price, future_mid_prices, alpha = 0.00001):
     return tf.where(condition_up, 2, tf.where(condition_down, 0, 1))
 
 
-def generate_stationary_labels(current_mid_price,future_mid_prices, alpha = 0.0001):
+def generate_stationary_labels(current_mid_price,future_mid_prices, alpha = 0.00002):
     cumprods = tf.math.cumprod(1 + future_mid_prices)
     pct_mean_cumprods = tf.reduce_mean(cumprods)
     condition_up = tf.greater(pct_mean_cumprods,1 + alpha)
