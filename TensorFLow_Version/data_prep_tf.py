@@ -3,13 +3,10 @@ import numpy as np
 
 def z_score(df):
     means = df.expanding().mean().shift()  # Calculate expanding mean and shift by one
-    print('means:' ,means)
     sums = df.expanding().sum().shift()
-    print('sums:', sums)
-    stds = (sums - means)/np.array([df.index.values] * 40).T
-    print('stds:', stds)
+    stds = (sums - means)/np.array(df.index)
     normalized_df = (df.iloc[1:,:] - means.iloc[1:,:]) / stds.iloc[1:,:]
-    return normalized_df.iloc[1:].reset_index(drop = True)
+    return normalized_df.reset_index(drop = True, inplace = True)
 
 def get_mid_price(x):
    return (x[0] + x[2])/ 2.0
@@ -28,16 +25,11 @@ def generate_labels(current_mid_price, future_mid_prices, alpha = 0.0001):
     return tf.where(condition_up, 2, tf.where(condition_down, 0, 1))
 
 
-def generate_labels_no_mid(current_mid_price, future_mid_prices, alpha = 0.01):
-    future_mid = future_mid_prices[-1]
-    # Due to scaling mid prices can either be positive or negative
-    if current_mid_price >= 0:
-        condition_up = tf.greater(future_mid, current_mid_price + alpha * current_mid_price)
-        condition_down = tf.less(future_mid, current_mid_price - alpha * current_mid_price)
-    else:
-        condition_up = tf.greater(future_mid, current_mid_price - alpha * current_mid_price)
-        condition_down = tf.less(future_mid, current_mid_price + alpha * current_mid_price)
-
+def generate_stationary_labels(current_mid_price,future_mid_prices, alpha = 0.001):
+    cumprods = tf.cumprod(1 + future_mid_prices)
+    pct_mean_cumprods = tf.reduce_mean(cumprods)
+    condition_up = tf.greater(pct_mean_cumprods,1 + alpha)
+    condition_down = tf.less(pct_mean_cumprods, 1 -alpha)
     return tf.where(condition_up, 2, tf.where(condition_down, 0, 1))
 
 def generate_labels_no_scale(current_mid_price, future_mid_prices):
@@ -82,7 +74,7 @@ def train_data_pipe(tf_dataset, window_size, batch_size, k, length):
     mid_prices = mid_prices.take(len(mid_prices) - k + 1)
     # Now we can create the tensorflow dataset type that consists the label for every timestamp
     tf_labels = tf.data.Dataset.zip((mid_prices, future_mid_prices)).map(
-        lambda current, future: (generate_labels(current, future)), num_parallel_calls=tf.data.AUTOTUNE)
+        lambda current, future: (generate_stationary_labels(current, future)), num_parallel_calls=tf.data.AUTOTUNE)
 
     ds = make_window_dataset(tf_dataset, tf_labels, window_size=window_size, shift=1, horizon=k)
 
@@ -91,7 +83,7 @@ def train_data_pipe(tf_dataset, window_size, batch_size, k, length):
     neutral = 0
     up = 0
     down = 0
-    for data, label in ds:
+    for _, label in ds:
         if label.numpy() == 1:
             neutral += 1
         elif label.numpy() ==2:
