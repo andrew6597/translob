@@ -43,7 +43,7 @@ def generate_labels_no_scale(current_mid_price, future_mid_prices):
 
 
 
-def make_window_dataset(ds, labels, window_size=100, shift=1, horizon=600):
+def make_window_dataset(ds, labels, window_size=300, shift=1, horizon=100):
     # No split the data to time windows and get rid off the last window size and horizon +2(The +2 is for indexing purposes)
     ds_windows = ds.window(window_size, shift=shift, stride=1, drop_remainder=True)
     # ds_windows = ds_windows.take(ds_windows.cardinality().numpy() - (window_size - 1) - (horizon - 1))
