@@ -65,7 +65,7 @@ if __name__ == '__main__':
     # Set params
     window_size = 300
     batch_size = 16
-    k = 100
+    k = 50
     epochs = 3
     lr = 0.0001
 
