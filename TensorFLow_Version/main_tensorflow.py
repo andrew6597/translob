@@ -35,17 +35,17 @@ if __name__ == '__main__':
     df = pd.read_csv('/content/drive/My Drive/LOBseries_100ms.csv').drop(columns=['Unnamed: 0'])
     print('Loaded df', df.shape)
     
-    df_diff = df.pct_change().dropna()
-    df_diff.reset_index(inplace=True, drop=True)
+    #df_diff = df.pct_change().dropna()
+    #df_diff.reset_index(inplace=True, drop=True)
 
-    print('Data made stationary by taking percentage change')
+    #print('Data made stationary by taking percentage change')
 
-    val_point = int(len(df_diff) * 2 / 3)
+    val_point = int(len(df) * 2 / 3)
     test_point = val_point + 150000
     
-    df_train = df_diff.iloc[:val_point, :n_dim]
-    df_val = df_diff.iloc[val_point:test_point, :n_dim]
-    df_test = df_diff.iloc[test_point:, :n_dim]
+    df_train = df.iloc[:val_point, :n_dim]
+    df_val = df.iloc[val_point:test_point, :n_dim]
+    df_test = df.iloc[test_point:, :n_dim]
     
     # Scale the data (Not neccessary if we do it with pct change)
 
@@ -54,7 +54,7 @@ if __name__ == '__main__':
     scaler.fit(df_train)
     df_train_scaled = pd.DataFrame(scaler.transform(df_train))
     df_val_scaled = pd.DataFrame(scaler.transform(df_val))
-    df_test_scaled = pd.DataFrame(scaler.transform(df_test)
+    df_test_scaled = pd.DataFrame(scaler.transform(df_test))
     print('Done Scaling')
 
     # Load the data as tensorflow datasets for efficiency
