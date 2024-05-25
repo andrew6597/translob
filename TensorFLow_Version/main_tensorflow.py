@@ -47,15 +47,15 @@ if __name__ == '__main__':
     df_val = df_diff.iloc[val_point:test_point, :n_dim]
     df_test = df_diff.iloc[test_point:, :n_dim]
     
-    # Scale the data (Unneccessaty if we do it with pct change)
+    # Scale the data (Not neccessary if we do it with pct change)
 
-    '''
+    
     scaler = StandardScaler()
     scaler.fit(df_train)
     df_train_scaled = pd.DataFrame(scaler.transform(df_train))
     df_val_scaled = pd.DataFrame(scaler.transform(df_val))
     df_test_scaled = pd.DataFrame(scaler.transform(df_test)
-    print('Done Scaling')'''
+    print('Done Scaling')
 
     # Load the data as tensorflow datasets for efficiency
     tf_dataset_train = tf.data.Dataset.from_tensor_slices(df_train)
@@ -63,11 +63,11 @@ if __name__ == '__main__':
     tf_dataset_test = tf.data.Dataset.from_tensor_slices(df_test)
 
     # Set params
-    window_size = 50
+    window_size = 100
     batch_size = 16
-    k = 10
+    k = 100
     epochs = 10
-    lr = 0.00001
+    lr = 1e-5
 
     # Set the data pipeline for preprocessing before training
     ds_train, proportions = train_data_pipe(tf_dataset_train, window_size, batch_size, k, val_point)
@@ -96,7 +96,7 @@ if __name__ == '__main__':
     )
 
     # Fit the model
-    r = model.fit(ds_train, epochs=epochs, batch_size=batch_size, validation_data=ds_val, class_weight = train_class_weights)
+    r = model.fit(ds_train, epochs=epochs, batch_size=batch_size, validation_data=ds_val)
 
     # Finally test the model on test data
     predictions = model.predict(ds_test)
