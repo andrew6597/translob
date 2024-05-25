@@ -11,7 +11,7 @@ def z_score(df):
 def get_mid_price(x):
    return (x[0] + x[2])/ 2.0
 
-def generate_labels(current_mid_price, future_mid_prices, alpha = 0.000005):
+def generate_labels(current_mid_price, future_mid_prices, alpha = 0.0005):
 
     mean_future_mid_prices = tf.reduce_mean(future_mid_prices)
 
@@ -74,7 +74,7 @@ def train_data_pipe(tf_dataset, window_size, batch_size, k, length):
     mid_prices = mid_prices.take(len(mid_prices) - k + 1)
     # Now we can create the tensorflow dataset type that consists the label for every timestamp
     tf_labels = tf.data.Dataset.zip((mid_prices, future_mid_prices)).map(
-        lambda current, future: (generate_stationary_labels(current, future)), num_parallel_calls=tf.data.AUTOTUNE)
+        lambda current, future: (generate_labels(current, future)), num_parallel_calls=tf.data.AUTOTUNE)
 
     ds = make_window_dataset(tf_dataset, tf_labels, window_size=window_size, shift=1, horizon=k)
 
