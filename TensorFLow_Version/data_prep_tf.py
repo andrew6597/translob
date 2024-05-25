@@ -11,7 +11,7 @@ def z_score(df):
 def get_mid_price(x):
    return (x[0] + x[2])/ 2.0
 
-def generate_labels(current_mid_price, future_mid_prices, alpha = 0.0005):
+def generate_labels(current_mid_price, future_mid_prices, alpha = 5e-5):
 
     mean_future_mid_prices = tf.reduce_mean(future_mid_prices)
 
