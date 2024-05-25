@@ -66,8 +66,8 @@ if __name__ == '__main__':
     window_size = 100
     batch_size = 16
     k = 100
-    epochs = 10
-    lr = 1e-5
+    epochs = 5
+    lr = 1e-3
 
     # Set the data pipeline for preprocessing before training
     ds_train, proportions = train_data_pipe(tf_dataset_train, window_size, batch_size, k, val_point)
