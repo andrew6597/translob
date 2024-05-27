@@ -76,10 +76,10 @@ if __name__ == '__main__':
 
     # Create and compile the model
     model = TransLOB(window_size, n_dim)
-
-    train_class_weights = {0: (1 / proportions[0]), 
-                           1: (1 / proportions[1]), 
-                           2: (1 / proportions[2])}
+    prop_scaler = min(proportions) 
+    train_class_weights = {0: (prop_scaler / proportions[0]), 
+                           1: (prop_scaler / proportions[1]), 
+                           2: (prop_scaler / proportions[2])}
     
 
 
