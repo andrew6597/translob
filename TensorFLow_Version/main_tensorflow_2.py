@@ -42,7 +42,7 @@ if __name__ == '__main__':
     df.loc[df['future_price'] < df['mid_price'] * (1-a), 'label'] = 0
     print('done labeling')
     print(df['label'].value_counts())
-  
+   '''
    for t in range(0,len(df) - T): 
       X.append(df_scaled[t:t+T])
       Y.append(df_scaled[t+T,0]) #The target is in the first column =
@@ -130,4 +130,4 @@ if __name__ == '__main__':
     cm = confusion_matrix(true_classes, predicted_classes)
     print(cm)
 
-    model.save('/content/drive/My Drive/my_model.h5')
+    model.save('/content/drive/My Drive/my_model.h5')'''
