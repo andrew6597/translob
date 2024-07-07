@@ -52,8 +52,8 @@ if __name__ == '__main__':
     lr = float(input("Please enter lr: "))
     print("You entered the float:", lr)
     
-    batch_size = float(input("Please enter batch_size: "))
-    print("You entered the float:", batch_size)
+    batch_size = int(input("Please enter batch_size: "))
+    print("You entered the int:", batch_size)
     
     df['mid_price'] = (df['p1_a'] + df['p1_b']) / 2.0
     df['label'] = 1
