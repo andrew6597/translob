@@ -84,7 +84,7 @@ if __name__ == '__main__':
 
     X_train = np.array(X_train).reshape(N,window_size,n_dim)
     y_train = np.array(y_train)
-    print('X_train shape:', X_train.shape, 'y_train shape:', y_train.shape
+    print('X_train shape:', X_train.shape, 'y_train shape:', y_train.shape)
 
     # Validation data
     X_val = []
