@@ -37,8 +37,8 @@ if __name__ == '__main__':
     n_dim = float(input("Please enter n_dim: "))
     print("You entered the float:", n_dim)
     
-    k = float(input("Please enter k: "))
-    print("You entered the float:", k)
+    k = int(input("Please enter k: "))
+    print("You entered the int:", k)
     
     a = float(input("Please enter a: "))
     print("You entered the float:", a)
