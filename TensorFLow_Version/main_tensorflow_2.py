@@ -66,7 +66,10 @@ if __name__ == '__main__':
     df_train = df[:val_point]
     df_val = df[val_point:test_point]
     df_test = df[test_point:]
-
+    
+    df_train.reset_index(inplace = True, drop =True)
+    df_val.reset_index(inplace = True, drop =True)
+    df_test.reset_index(inplace = True, drop =True)
     
     # Scale the data (Not neccessary if we do it with pct change)
     
@@ -77,9 +80,7 @@ if __name__ == '__main__':
     df_test_scaled = pd.DataFrame(scaler.transform(df_test))
     print('Done Scaling')
     
-    df_train_scaled.reset_index(inplace = True, drop =True)
-    df_val_scaled.reset_index(inplace = True, drop =True)
-    df_test_scaled.reset_index(inplace = True, drop =True)
+
     print('index reseted')
     print('train shape',df_train_scaled.shape)
     print('val shape',df_val_scaled.shape)
