@@ -34,8 +34,8 @@ if __name__ == '__main__':
 
     # Set params
     # Prompt the user for input and store it in a variable
-    n_dim = float(input("Please enter n_dim: "))
-    print("You entered the float:", n_dim)
+    n_dim = int(input("Please enter n_dim: "))
+    print("You entered the int:", n_dim)
     
     k = int(input("Please enter k: "))
     print("You entered the int:", k)
