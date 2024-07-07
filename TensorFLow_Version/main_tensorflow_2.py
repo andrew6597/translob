@@ -46,6 +46,12 @@ if __name__ == '__main__':
     a = float(input("Please enter a: "))
     print("You entered the float:", a)
     
+    epochs = int(input("Please enter epochs: "))
+    print("You entered the int:", epochs)
+    
+    lr = float(input("Please enter lr: "))
+    print("You entered the float:", lr)
+    
     df['mid_price'] = (df['p1_a'] + df['p1_b']) / 2.0
     df['label'] = 1
     df['future_price'] = df['mid_price'].shift(-k)
@@ -70,13 +76,18 @@ if __name__ == '__main__':
     df_val_scaled = pd.DataFrame(scaler.transform(df_val))
     df_test_scaled = pd.DataFrame(scaler.transform(df_test))
     print('Done Scaling')
+    
+    df_train_scaled.reset_index(inplace = True, drop =True)
+    df_val_scaled.reset_index(inplace = True, drop =True)
+    df_test_scaled.reset_index(inplace = True, drop =True)
+    print('index reseted')
 
-    ## Split into timeseries data every one dataset
-
+    print('Starting to splitting data into timeseries')
+          
     # Train Data
     X_train = []
     y_train = []
-    for t in range(0,len(df) - window_size): 
+    for t in range(0,len(df_train) - window_size): 
         X_train.append(df_train_scaled.iloc[t:t+window_size, :n_dim])
         y_train.append(df_train.loc[t+window_size,'label'])
 
@@ -111,14 +122,6 @@ if __name__ == '__main__':
     X_test = np.array(X_test).reshape(N_test, window_size, n_dim)
     y_test = np.array(y_test)
     print('X_test shape:', X_test.shape, 'y_test shape:', y_test.shape)
-
-
-    # Set params
-    epochs = int(input("Please enter epochs: "))
-    print("You entered the int:", epochs)
-    
-    lr = float(input("Please enter lr: "))
-    print("You entered the float:", lr)
 
     # Create and compile the model
     model = TransLOB(window_size, n_dim) 
