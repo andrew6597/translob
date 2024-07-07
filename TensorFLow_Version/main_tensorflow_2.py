@@ -28,13 +28,21 @@ if __name__ == '__main__':
     else:
         print("No GPU found")
 
-    # Set params
-    n_dim = 40
-    k = 100
-    a = 0.0005
     # Load and split df
     df = pd.read_csv('/content/drive/My Drive/LOBseries_100ms.csv').drop(columns=['Unnamed: 0'])
     print('Loaded df', df.shape)
+
+    # Set params
+    # Prompt the user for input and store it in a variable
+    n_dim = float(input("Please enter n_dim: "))
+    print("You entered the float:", n_dim)
+    
+    k = float(input("Please enter k: "))
+    print("You entered the float:", k)
+    
+    a = float(input("Please enter a: "))
+    print("You entered the float:", a)
+    
     df['mid_price'] = (df['p1_a'] + df['p1_b']) / 2.0
     df['label'] = 1
     df['future_price'] = df['mid_price'].shift(-k)
