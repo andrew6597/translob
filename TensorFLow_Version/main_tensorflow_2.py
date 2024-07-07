@@ -57,9 +57,9 @@ if __name__ == '__main__':
     val_point = int(len(df) * 2 / 3)
     test_point = val_point + 150000
     
-    df_train = df.iloc[:val_point, :n_dim]
-    df_val = df.iloc[val_point:test_point, :n_dim]
-    df_test = df.iloc[test_point:, :n_dim]
+    df_train = df[:val_point]
+    df_val = df[val_point:test_point]
+    df_test = df[test_point:]
 
     
     # Scale the data (Not neccessary if we do it with pct change)
