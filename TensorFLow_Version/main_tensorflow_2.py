@@ -81,7 +81,9 @@ if __name__ == '__main__':
     df_val_scaled.reset_index(inplace = True, drop =True)
     df_test_scaled.reset_index(inplace = True, drop =True)
     print('index reseted')
-
+    print('train shape',df_train_scaled.shape)
+    print('val shape',df_val_scaled.shape)
+    print('test shape',df_val_scaled.shape)
     print('Starting to splitting data into timeseries')
           
     # Train Data
